@@ -1,0 +1,24 @@
+<aura:component controller="DataFetcher" implements="flexipage:availableForAllPageTypes">
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <aura:attribute name="accounts" type="Account[]" default="[]"/>
+    <aura:attribute name="selectedId" type="String"/>
+
+    <lightning:messageChannel
+        aura:id="mchannel"
+        type="test_channel__c"
+    />
+
+    <lightning:card title="Aura Publisher" iconName="custom:custom36">
+        <ul class="slds-var-m-around_medium">
+            <aura:iteration var="account" items="{!v.accounts}" >
+                <li onclick="{!c.handleClick}" data-id="{!account.Id}">
+                    {!account.Name}&nbsp;({!account.Id})
+                </li>    
+            </aura:iteration>
+        </ul>
+        Message recordId: {!v.selectedId}
+    </lightning:card>
+
+</aura:component>	

@@ -1,5 +1,19 @@
 public with sharing class DataFetcher {
 
+    @AuraEnabled(cacheable=true)
+    public static List<Account> getAccounts(){
+        return [SELECT Id, Name, Type FROM Account];        
+    }
+
+    @RemoteAction
+    public static List<Account> getAccountsRemote(){
+        return getAccounts();
+    }
+
+    @AuraEnabled(cacheable=true)
+    public static List<Contact> getContacts(String accountId){
+        return [SELECT Id, Name, FirstName, LastName, Account.Name, Account.Id FROM Contact WHERE AccountId = : accountId];        
+    }
 
     public static void createTestRecords(){
 
@@ -25,10 +39,20 @@ public with sharing class DataFetcher {
         contacts.add(new Contact(FirstName='Lois', LastName='Weedon', AccountId=accounts[2].Id));
         contacts.add(new Contact(FirstName='Wiley', LastName='Tosside', AccountId=accounts[2].Id));
         contacts.add(new Contact(FirstName='Geraint', LastName='Slackbottom', AccountId=accounts[2].Id));
+        
+        insert contacts;
+    }
+
+    public static void deleteData() {
+        
+        delete [select Id from Contact];
+        delete [select Id from Account];
+
     }
 
     public static void refreshData(){
         // delete stuff
+        deleteData();
 
         // re-run creatTestRecords
         createTestRecords();

@@ -1,0 +1,37 @@
+<aura:component controller="DataFetcher" implements="flexipage:availableForAllPageTypes">
+
+    <aura:attribute name="contacts" type="Contact[]" default="[]"/>
+    <aura:attribute name="publishedId" type="String"/>
+    <aura:attribute name="publishedFrom" type="String"/>
+
+    <lightning:messageChannel
+        aura:id="mchannel"
+        type="test_channel__c"
+        onMessage="{!c.handleMessage}"
+    />
+
+    <lightning:card
+        title="Aura Subscriber"
+        iconName="custom:custom36">
+        <div>
+            <p>Message recordId: {!v.publishedId}</p>
+            <p>Published from: {!v.publishedFrom}</p>
+        </div>
+
+        <aura:if isTrue="{!v.contacts.length > 0}">
+
+            <ul>
+                <aura:iteration var="contact" items="{!v.contacts}" >
+                    <li>
+                        {!contact.Account.Name}&nbsp;({!contact.Account.Id}):&nbsp;{!contact.Name}
+                    </li>    
+                </aura:iteration>
+            </ul>
+
+            <aura:set attribute="else">
+                No Records
+            </aura:set>
+        </aura:if>
+        </lightning:card>
+
+</aura:component>	

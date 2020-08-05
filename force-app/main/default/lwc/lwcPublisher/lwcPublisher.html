@@ -1,0 +1,12 @@
+<template>
+    <lightning-card title="LWC Publisher" icon-name="custom:custom36">
+        <ul class="slds-var-m-around_medium">
+            <template for:each={accounts.data} for:item="account">
+                <li key={account.Id} onclick={handleClick} data-id={account.Id}>
+                    &nbsp;{account.Name}&nbsp;({account.Id})
+                </li>
+            </template>
+        </ul>
+        Message recordId: {selectedId}
+    </lightning-card>
+</template>

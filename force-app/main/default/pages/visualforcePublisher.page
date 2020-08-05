@@ -1,0 +1,41 @@
+<apex:page controller="DataFetcher">
+    <apex:slds/>
+
+    <ul></ul>
+    <p>Message recordId: <span></span></p>
+
+    <script>
+        const TEST_CHANNEL = '{!$MessageChannel.test_channel__c}';
+        const {getAccountsRemote} = DataFetcher; 
+    
+
+        document.addEventListener('DOMContentLoaded', ()=> {
+
+            getAccountsRemote((result, event) => {
+                const ul = document.querySelector('ul');
+
+                if (result) {
+                    const acctList = result
+                                        .map(item => `<li data-id="${item.Id}">${item.Name} (${item.Id})</li>`)
+                                        .join(' ');
+                    
+                    ul.innerHTML = acctList; 
+
+                    ul.querySelectorAll('li').forEach(item => item.addEventListener('click', handleSelectItem));
+                }
+            })
+
+        });
+
+        function handleSelectItem(event){
+            const requestFrom = 'VISUALFORCE';
+            const recordId = event.target.dataset.id;
+            document.querySelector('span').innerText = `${recordId}`;
+
+            const payload = {recordId, requestFrom};
+
+            sforce.one.publish(TEST_CHANNEL, payload);
+        }
+
+    </script>
+</apex:page>
